@@ -53,7 +53,7 @@ abstract class CardContracts {
         this.cards = cards;
     }
 
-    isEmpty() {
+    isEmpty(): boolean {
         return this.cards.length === 0
     }
 
@@ -70,10 +70,10 @@ abstract class CardContracts {
     }
 
     removeCard(cardsToBeRemoved: Card[]) {
-        this.cards = this.cards.filter((card,i) => !cardsToBeRemoved.includes(card))
+        this.cards = this.cards.filter((card, i) => !cardsToBeRemoved.includes(card))
     }
 
-    getCards() {
+    getCards(): Card[] {
         return this.cards
     }
 
@@ -82,7 +82,7 @@ abstract class CardContracts {
 
 export class Pillar extends CardContracts {
     canCardBeInserted(cards: Card[]) {
-        if(this.isEmpty()){
+        if (this.isEmpty()) {
             return true
         }
         return cards[0].isHigherInRank(this.getLastCard()) || cards[0].isSameColor(this.getLastCard()) ? false : true
@@ -244,7 +244,10 @@ class Game {
             originalCardContract.removeCard(selectedCards)
             selectedCards.forEach(card => card.isSelected === true ? card.isSelected = false : card.isSelected = true)
 
-        } else console.log("Card cannot be inserted")
+        } else {
+            selectedCards.forEach(card => card.isSelected === true ? card.isSelected = false : card.isSelected = true)
+            console.log('Card cant be inserted')
+        }
 
     }
 
@@ -284,3 +287,7 @@ let game = new Game(foundations, pillars, freeCells);
 
 
 export default game
+
+
+
+

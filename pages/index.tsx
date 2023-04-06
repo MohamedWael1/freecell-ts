@@ -16,7 +16,6 @@ export default function Home() {
     const [isGameInit, setIsGameInit] = useState(false);
     const [, setForceUpdate] = useReducer((x) => x + 1, 0);
     const [selectedCards, setSelectedCards] = useState<Card[]>([]);
-    console.log(selectedCards);
     const handleSelect = (
         card: Card,
         cardContract: Pillar | FreeCell | Foundation
@@ -95,8 +94,8 @@ export default function Home() {
                 </button>
             </div>
 
-            <div className="flex">
-                <div className="flex pt-8 pb-12 w-full">
+            <div className="flex items-between max-w-6xl mx-auto ">
+                <div className="flex pt-8 pb-12 w-full mr-24">
                     {game.getFreeCells().map((freeCell, index) => (
                         <div
                             key={index}
@@ -107,7 +106,10 @@ export default function Home() {
                             }}
                         >
                             {freeCell.getCards().map((card, index) => (
-                                <div key={card.id}>
+                                <motion.div
+                                    key={card.id}
+                                    layoutId={card.id}
+                                >
                                     <Image
                                         src={card.img}
                                         key={card.img}
@@ -115,7 +117,7 @@ export default function Home() {
                                         height={10}
                                         width={100}
                                     />
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     ))}
@@ -127,14 +129,25 @@ export default function Home() {
                             className="border border-white max-w-[100px] min-h-[150px] rounded-md w-full mr-2 relative"
                             onClick={() => {
                                 handleSelect(
-                                    foundation.getCards()[0],
+                                    foundation
+                                        .getCards()
+                                        .map((card) => card) as unknown as Card,
                                     foundation
                                 );
                                 handleInsertion(foundation);
                             }}
                         >
                             {foundation.getCards().map((card, index) => (
-                                <div key={card.id} className="absolute">
+                                <motion.div
+                                    key={card.id}
+                                    className={`absolute
+                                ${
+                                    card.isSelected
+                                        ? `shadow-xl shadow-slate-200  `
+                                        : ""
+                                }`}
+                                    layoutId={card.id}
+                                >
                                     <Image
                                         src={card.img}
                                         key={card.img}
@@ -142,7 +155,7 @@ export default function Home() {
                                         height={10}
                                         width={100}
                                     />
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     ))}
@@ -151,42 +164,43 @@ export default function Home() {
             <div className="grid grid-cols-8">
                 {game.getPillars().map((pillar, index) => {
                     return (
-                        <div
+                        <motion.div
                             className=" relative border border-white max-w-[100px] min-h-[150px] rounded-md "
                             key={index}
                             onClick={() => {
-                                if(pillar.isEmpty()){
+                                if (pillar.isEmpty()) {
                                     handleSelect(pillar.getCards()[0], pillar);
                                     handleInsertion(pillar);
-                                } 
+                                }
                             }}
                         >
                             {pillar.getCards().map((card, i) => {
                                 return (
                                     <motion.div
+                                        layoutId={card.id}
                                         key={card.id}
                                         className={`absolute
                                          ${
                                              card.isSelected
-                                                 ? `shadow-lg shadow-slate-50  `
+                                                 ? `shadow-xl shadow-slate-200  `
                                                  : ""
                                          }`}
                                         onClick={() => {
                                             handleSelect(card, pillar);
                                             handleInsertion(pillar);
                                         }}
-                                        style={{ top: `${i * 50}px` }}
+                                        style={{ top: `${i * 30}px` }}
                                     >
                                         <Image
                                             src={card.img}
                                             alt={card.img}
-                                            height={10}
+                                            height={100}
                                             width={100}
                                         />
                                     </motion.div>
                                 );
                             })}
-                        </div>
+                        </motion.div>
                     );
                 })}
             </div>
