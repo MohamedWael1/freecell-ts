@@ -175,26 +175,7 @@ export default function Home() {
                             {pillar.getCards().map((card, i) => {
                                 return (
                                     <motion.div
-                                        // trying to make the cards draggable
-                                        drag={isDraggable()}
-                                        whileDrag={{ zIndex: 1 }}
-                                        dragSnapToOrigin={true}
-                                        onDragStart={() => {
-                                            handleSelect(card, pillar);
-                                        }}
-                                        onDragEnd={(e, info) => {
-                                            console.log(
-                                                info.point.x
-                                            );
-                                            handleInsertion(
-                                                game.getPillars()[
-                                                    Math.floor(
-                                                        info.point.x / 100 - 1
-                                                    )
-                                                ]
-                                            );
-                                        }}
-                                        //end of try
+                                        
                                         layoutId={card.id}
                                         key={card.id}
                                         className={`absolute
