@@ -22,9 +22,7 @@ export default function Home() {
         cardContract: Pillar | FreeCell | Foundation
     ) => {
         if (selectedCards.length === 0) {
-            setSelectedCards(
-                selectCards(card, cardContract) 
-            );
+            setSelectedCards(selectCards(card, cardContract));
         }
     };
 
@@ -36,7 +34,7 @@ export default function Home() {
                 getOriginalCardContract() as Pillar | FreeCell | Foundation
             );
             setSelectedCards([]);
-            game.playerStatus()
+            game.playerStatus();
         }
     };
 
@@ -105,7 +103,16 @@ export default function Home() {
                             }}
                         >
                             {freeCell.getCards().map((card, index) => (
-                                <motion.div key={card.id} layoutId={card.id}>
+                                <motion.div
+                                    key={card.id}
+                                    layoutId={card.id}
+                                    className={`
+                                ${
+                                    card.isSelected
+                                        ? `shadow-xl shadow-slate-200  `
+                                        : ""
+                                }`}
+                                >
                                     <Image
                                         src={card.img}
                                         key={card.img}
