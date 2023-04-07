@@ -102,7 +102,7 @@ export class Pillar extends CardContracts {
 
     }
 
-    private areColorsAlternate(card: Card) {
+    private areColorsAlternate(card: Card): boolean {
         const cards = this.getCards()
         const cardIndex = cards.indexOf(card);
         const slicedCards = cards.slice(cardIndex, cards.length);
@@ -115,18 +115,18 @@ export class Pillar extends CardContracts {
         return true
     }
 
-    private numberOfDraggableCards(freeCells: FreeCell[]) {
+    private numberOfDraggableCards(freeCells: FreeCell[]): number {
         return 5 - freeCells.map(freeCell => freeCell.getNumberOfCardsInFreeCells()).reduce((a, b) => a + b, 0)
     }
 
-    private lengthOfCardsToBeDragged(card: Card) {
+    private lengthOfCardsToBeDragged(card: Card): number {
         const cards = this.getCards()
         const cardIndex = cards.indexOf(card);
         return cards.slice(cardIndex, cards.length).length
     }
 
 
-    canCardBeDragged(card: Card, freeCells: FreeCell[]) {
+    canCardBeDragged(card: Card, freeCells: FreeCell[]): boolean {
         if (this.areCardsSequenced(card) && this.areColorsAlternate(card) && this.numberOfDraggableCards(freeCells) >= this.lengthOfCardsToBeDragged(card)) {
             return true
         }
@@ -138,15 +138,15 @@ export class Pillar extends CardContracts {
 
 export class FreeCell extends CardContracts {
 
-    canCardBeInserted(cards: Card[]) {
+    canCardBeInserted(cards: Card[]): boolean {
         return this.isEmpty() && cards.length === 1
     }
 
-    getNumberOfCardsInFreeCells() {
+    getNumberOfCardsInFreeCells(): number {
         return this.getCards().length
     }
 
-    canCardBeDragged(card: Card) {
+    canCardBeDragged(card: Card): boolean {
         return true
     }
 
@@ -155,7 +155,7 @@ export class FreeCell extends CardContracts {
 
 
 export class Foundation extends CardContracts {
-    canCardBeInserted(cards: Card[]) {
+    canCardBeInserted(cards: Card[]): boolean {
         if (this.isEmpty() && cards[0].getRank() === 0) {
             return true
         } else if (this.isEmpty() && cards[0].getRank() > 0) {
@@ -165,7 +165,7 @@ export class Foundation extends CardContracts {
         return cards[0].getRank() - lastCard.getRank() === 1 && lastCard.isSameSuit(cards[0])
     }
 
-    canCardBeDragged(card: Card) {
+    canCardBeDragged(card: Card): boolean {
         return true
     }
 }
@@ -195,7 +195,7 @@ class Game {
         }
     }
 
-    private createPillars() {
+    private createPillars(): Pillar[] {
         let deck = this.shuffleDeck();
 
         let pillarIndex = 0;
@@ -210,7 +210,7 @@ class Game {
         return this.pillars;
     }
 
-    private generateDeck() {
+    private generateDeck(): Card[] {
         let deck: Card[] = [];
         for (const suit of suits) {
             for (let i = 0; i <= 12; i++) {
@@ -223,11 +223,11 @@ class Game {
         return deck;
     }
 
-    private getRandomCard() {
+    private getRandomCard(): number {
         return Math.ceil(Math.random() * this.generateDeck().length)
     }
 
-    private shuffleDeck() {
+    private shuffleDeck(): Card[] {
         let deck = this.generateDeck();
         let shuffledDeck: Card[] = [];
         for (let i = 0; i < 104; i++) {
@@ -251,7 +251,7 @@ class Game {
 
     }
 
-    selectCards(card: Card, cardContract: Pillar | FreeCell | Foundation) {
+    selectCards(card: Card, cardContract: Pillar | FreeCell | Foundation): Card[] {
         const cards = cardContract.getCards().slice(cardContract.getCards().indexOf(card))
         if (cardContract.canCardBeDragged(card, this.freeCells)) {
             cards.forEach(card => card.isSelected === true ? card.isSelected = false : card.isSelected = true)
@@ -263,19 +263,19 @@ class Game {
         this.originalCardContract = cardContract
     }
 
-    getOriginalCardContract() {
+    getOriginalCardContract(): Pillar | FreeCell | Foundation | null {
         return this.originalCardContract
     }
 
-    getFoundations() {
+    getFoundations(): Foundation[] {
         return this.foundations
     }
 
-    getFreeCells() {
+    getFreeCells(): FreeCell[] {
         return this.freeCells
     }
 
-    getPillars() {
+    getPillars(): Pillar[] {
         return this.pillars
     }
 }

@@ -16,14 +16,14 @@ export default function Home() {
     const [isGameInit, setIsGameInit] = useState(false);
     const [, setForceUpdate] = useReducer((x) => x + 1, 0);
     const [selectedCards, setSelectedCards] = useState<Card[]>([]);
-    console.log(selectedCards);
+
     const handleSelect = (
         card: Card,
         cardContract: Pillar | FreeCell | Foundation
     ) => {
         if (selectedCards.length === 0) {
             setSelectedCards(
-                selectCards(card, cardContract) as unknown as Card[]
+                selectCards(card, cardContract) 
             );
         }
     };
@@ -51,7 +51,7 @@ export default function Home() {
     const selectCards = (
         card: Card,
         cardContract: Pillar | FreeCell | Foundation
-    ) => {
+    ): Card[] => {
         setOriginalCardContract(cardContract);
         return game.selectCards(card, cardContract);
     };
@@ -175,6 +175,26 @@ export default function Home() {
                             {pillar.getCards().map((card, i) => {
                                 return (
                                     <motion.div
+                                        // trying to make the cards draggable
+                                        drag={isDraggable()}
+                                        whileDrag={{ zIndex: 1 }}
+                                        dragSnapToOrigin={true}
+                                        onDragStart={() => {
+                                            handleSelect(card, pillar);
+                                        }}
+                                        onDragEnd={(e, info) => {
+                                            console.log(
+                                                info.point.x
+                                            );
+                                            handleInsertion(
+                                                game.getPillars()[
+                                                    Math.floor(
+                                                        info.point.x / 100 - 1
+                                                    )
+                                                ]
+                                            );
+                                        }}
+                                        //end of try
                                         layoutId={card.id}
                                         key={card.id}
                                         className={`absolute
