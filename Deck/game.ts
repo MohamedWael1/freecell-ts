@@ -85,7 +85,7 @@ export class Pillar extends CardContracts {
         if (this.isEmpty()) {
             return true
         }
-        return cards[0].isHigherInRank(this.getLastCard()) || cards[0].isSameColor(this.getLastCard()) ? false : true
+        return cards[0].isHigherInRank(this.getLastCard()) || cards[0].isSameColor(this.getLastCard()) || this.getLastCard().getRank() - cards[0].getRank() > 1 ? false : true
     }
 
     private areCardsSequenced(card: Card): boolean {

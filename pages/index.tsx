@@ -16,6 +16,7 @@ export default function Home() {
     const [isGameInit, setIsGameInit] = useState(false);
     const [, setForceUpdate] = useReducer((x) => x + 1, 0);
     const [selectedCards, setSelectedCards] = useState<Card[]>([]);
+    console.log(selectedCards)
     const handleSelect = (
         card: Card,
         cardContract: Pillar | FreeCell | Foundation
@@ -44,10 +45,8 @@ export default function Home() {
     };
 
     const isDraggable = (
-        card: Card,
-        cardContract: Pillar | FreeCell | Foundation
     ): boolean => {
-        return !!game.selectCards(card, cardContract);
+        return selectedCards.length > 0 ;
     };
 
     const selectCards = (
@@ -106,10 +105,7 @@ export default function Home() {
                             }}
                         >
                             {freeCell.getCards().map((card, index) => (
-                                <motion.div
-                                    key={card.id}
-                                    layoutId={card.id}
-                                >
+                                <motion.div key={card.id} layoutId={card.id}>
                                     <Image
                                         src={card.img}
                                         key={card.img}
@@ -166,6 +162,9 @@ export default function Home() {
                     return (
                         <motion.div
                             className=" relative border border-white max-w-[100px] min-h-[150px] rounded-md "
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.2 }}
                             key={index}
                             onClick={() => {
                                 if (pillar.isEmpty()) {
@@ -196,6 +195,7 @@ export default function Home() {
                                             alt={card.img}
                                             height={100}
                                             width={100}
+                                            draggable={false}
                                         />
                                     </motion.div>
                                 );
