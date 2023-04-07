@@ -16,7 +16,7 @@ export default function Home() {
     const [isGameInit, setIsGameInit] = useState(false);
     const [, setForceUpdate] = useReducer((x) => x + 1, 0);
     const [selectedCards, setSelectedCards] = useState<Card[]>([]);
-    console.log(selectedCards)
+    console.log(selectedCards);
     const handleSelect = (
         card: Card,
         cardContract: Pillar | FreeCell | Foundation
@@ -44,9 +44,8 @@ export default function Home() {
         setIsGameInit(true);
     };
 
-    const isDraggable = (
-    ): boolean => {
-        return selectedCards.length > 0 ;
+    const isDraggable = (): boolean => {
+        return selectedCards.length > 0;
     };
 
     const selectCards = (
@@ -181,7 +180,7 @@ export default function Home() {
                                         className={`absolute
                                          ${
                                              card.isSelected
-                                                 ? `shadow-xl shadow-slate-200  `
+                                                 ? `shadow-xl shadow-slate-200`
                                                  : ""
                                          }`}
                                         onClick={() => {

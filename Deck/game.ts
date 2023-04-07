@@ -138,8 +138,8 @@ export class Pillar extends CardContracts {
 
 export class FreeCell extends CardContracts {
 
-    canCardBeInserted() {
-        return this.isEmpty()
+    canCardBeInserted(cards: Card[]) {
+        return this.isEmpty() && cards.length === 1
     }
 
     getNumberOfCardsInFreeCells() {
