@@ -253,7 +253,9 @@ class Game {
 
     selectCards(card: Card, cardContract: Pillar | FreeCell | Foundation) {
         const cards = cardContract.getCards().slice(cardContract.getCards().indexOf(card))
-        cards.forEach(card => card.isSelected === true ? card.isSelected = false : card.isSelected = true)
+        if (cardContract.canCardBeDragged(card, this.freeCells)) {
+            cards.forEach(card => card.isSelected === true ? card.isSelected = false : card.isSelected = true)
+        }
         return cardContract.canCardBeDragged(card, this.freeCells) ? cards : []
     }
 
