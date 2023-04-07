@@ -85,10 +85,12 @@ export class Pillar extends CardContracts {
         if (this.isEmpty()) {
             return true
         }
-        return cards[0].isHigherInRank(this.getLastCard()) || cards[0].isSameColor(this.getLastCard()) || this.getLastCard().getRank() - cards[0].getRank() > 1 ? false : true
+        return cards[0].isHigherInRank(this.getLastCard()) || cards[0].isSameColor(this.getLastCard()) ||
+            this.getLastCard().getRank() - cards[0].getRank() > 1 ||
+            this.getLastCard().getRank() - cards[0].getRank() < 1 ? false : true
     }
 
-    private areCardsSequenced(card: Card): boolean {
+    areCardsSequenced(card: Card): boolean {
         const cards = this.getCards()
         const cardIndex = cards.indexOf(card);
         const slicedCards = cards.slice(cardIndex, cards.length);
@@ -102,7 +104,7 @@ export class Pillar extends CardContracts {
 
     }
 
-    private areColorsAlternate(card: Card): boolean {
+    areColorsAlternate(card: Card): boolean {
         const cards = this.getCards()
         const cardIndex = cards.indexOf(card);
         const slicedCards = cards.slice(cardIndex, cards.length);
@@ -277,6 +279,10 @@ class Game {
 
     getPillars(): Pillar[] {
         return this.pillars
+    }
+
+    playerStatus(): boolean {
+        return this.foundations.every(foundation => foundation.getCards().length === 13) || this.pillars.every(pillar => pillar.areCardsSequenced(pillar.getCards()[0]) && pillar.areColorsAlternate(pillar.getCards()[0]));
     }
 }
 
