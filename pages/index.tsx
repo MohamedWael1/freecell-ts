@@ -2,6 +2,8 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
+import Confetti from "react-confetti";
+
 import {
     useEffect,
     useReducer,
@@ -16,6 +18,8 @@ export default function Home() {
     const [isGameInit, setIsGameInit] = useState(false);
     const [, setForceUpdate] = useReducer((x) => x + 1, 0);
     const [selectedCards, setSelectedCards] = useState<Card[]>([]);
+    const [windowWidth, setWindowWidth] = useState(0);
+    const [windowHeight, setWindowHeight] = useState(0);
 
     const handleSelect = (
         card: Card,
@@ -73,7 +77,32 @@ export default function Home() {
         return game.getOriginalCardContract();
     };
 
+    const getLastPosition = (
+        offsetX: number,
+        divisionNumber: number
+    ): number => {
+        let pos = 0;
+        if (offsetX > 0) {
+            pos = Math.floor(offsetX / divisionNumber);
+        } else pos = Math.ceil(offsetX / divisionNumber);
+
+        if (pos > 7) {
+            pos = 7;
+        }
+        if (pos < -7) {
+            pos = -7;
+        }
+        return pos;
+    };
+
     useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+            setWindowHeight(window.innerHeight);
+        };
+        window.addEventListener("resize", handleResize);
+        handleResize();
+        window.removeEventListener("resize", handleResize);
         const unsubscribe = game.addListener(setForceUpdate);
         return () => {
             unsubscribe();
@@ -82,6 +111,11 @@ export default function Home() {
 
     return (
         <div className="min-h-screen bg-green-500 p-4">
+            {game.playerStatus() === true && isGameInit ? (
+                <Confetti width={windowWidth} height={windowHeight} />
+            ) : (
+                ""
+            )}
             <div>
                 <button
                     className="bottom-8 right-8 bg-pink-500 text-white p-2 rounded-md  fixed"
@@ -119,6 +153,7 @@ export default function Home() {
                                         alt={card.img}
                                         height={10}
                                         width={100}
+                                        draggable={false}
                                     />
                                 </motion.div>
                             ))}
@@ -157,6 +192,7 @@ export default function Home() {
                                         alt={card.img}
                                         height={10}
                                         width={100}
+                                        draggable={false}
                                     />
                                 </motion.div>
                             ))}
@@ -191,15 +227,12 @@ export default function Home() {
                                         //     handleSelect(card, pillar);
                                         // }}
                                         // onDragEnd={(e, info) => {
-                                        //     console.log(
-                                        //         info.point.x
+                                        //     const pos = getLastPosition(
+                                        //         info.offset.x,
+                                        //         140
                                         //     );
                                         //     handleInsertion(
-                                        //         game.getPillars()[
-                                        //             Math.floor(
-                                        //                 info.point.x / 100 - 1
-                                        //             )
-                                        //         ]
+                                        //         game.getPillars()[index + pos]
                                         //     );
                                         // }}
                                         //end of try
